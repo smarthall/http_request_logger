@@ -14,7 +14,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         print("\n----- Request Start ----->\n")
         print("Request path:", request_path)
         print("Request headers:", self.headers)
-        print("<----- Request End -----\n")
+        print("<----- Request End -----\n", flush=True)
         
         self.send_response(200)
         self.send_header("Set-Cookie", "foo=bar")
@@ -34,7 +34,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         print("Content Length:", length)
         print("Request headers:", request_headers)
         print("Request payload:", self.rfile.read(length))
-        print("<----- Request End -----\n")
+        print("<----- Request End -----\n", flush=True)
         
         self.send_response(200)
         self.end_headers()
@@ -44,7 +44,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         
 def main():
     port = 80
-    print('Listening on 0.0.0.0:%s' % port)
+    print('Listening on 0.0.0.0:%s' % port, flush=True)
     server = HTTPServer(('', port), RequestHandler)
     server.serve_forever()
 

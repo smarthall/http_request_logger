@@ -1,0 +1,6 @@
+FROM python:3
+
+COPY reflect.py /
+
+CMD ["python", "/reflect.py"]
+EXPOSE 8080

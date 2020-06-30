@@ -1,0 +1,6 @@
+FROM python:3-windowsservercore
+
+COPY reflect.py "C:\\"
+
+CMD ["python", "C:\\reflect.py"]
+EXPOSE 8080

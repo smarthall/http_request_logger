@@ -1,49 +1,57 @@
 #!/usr/bin/env python
 # Reflects the requests from HTTP methods GET, POST, PUT, and DELETE
 # Written by Nathan Hamiel (2010)
+# Alterations by Daniel Hall (2020)
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from optparse import OptionParser
+from socket import gethostname
 
 class RequestHandler(BaseHTTPRequestHandler):
     
     def do_GET(self):
-        
-        request_path = self.path
-        
-        print("\n----- Request Start ----->\n")
-        print("Request path:", request_path)
-        print("Request headers:", self.headers)
-        print("<----- Request End -----\n", flush=True)
-        
+
         self.send_response(200)
-        self.send_header("Set-Cookie", "foo=bar")
         self.end_headers()
+
+        message = (
+        "Server: %s\n"
+        "Request Path: %s\n"
+        "--- START HEADERS ---\n"
+        "%s\n"
+        "--- END HEADERS ---\n"
+        ) % (gethostname(), self.path, self.headers)
+
+        self.wfile.write(b"<html><head><title>Echoserver</title></head><body><pre>")
+
+        self.wfile.write(message.encode('utf-8'))
+
+        self.wfile.write(b"</pre></body></html>")
         
     def do_POST(self):
-        
-        request_path = self.path
-        
-        print("\n----- Request Start ----->\n")
-        print("Request path:", request_path)
-        
-        request_headers = self.headers
-        content_length = request_headers.get('Content-Length')
-        length = int(content_length) if content_length else 0
-        
-        print("Content Length:", length)
-        print("Request headers:", request_headers)
-        print("Request payload:", self.rfile.read(length))
-        print("<----- Request End -----\n", flush=True)
-        
+
         self.send_response(200)
         self.end_headers()
+
+        message = (
+        "Server: %s\n"
+        "Request Path: %s\n"
+        "--- START HEADERS ---\n"
+        "%s\n"
+        "--- END HEADERS ---\n"
+        ) % (gethostname(), self.path, self.headers)
+
+        self.wfile.write(b"<html><head><title>Echoserver</title></head><body><pre>")
+
+        self.wfile.write(message.encode('utf-8'))
+
+        self.wfile.write(b"</pre></body></html>")
     
     do_PUT = do_POST
     do_DELETE = do_GET
         
 def main():
-    port = 80
+    port = 8080
     print('Listening on 0.0.0.0:%s' % port, flush=True)
     server = HTTPServer(('', port), RequestHandler)
     server.serve_forever()
@@ -51,7 +59,7 @@ def main():
         
 if __name__ == "__main__":
     parser = OptionParser()
-    parser.usage = ("Creates an http-server that will echo out any GET or POST parameters\n"
+    parser.usage = ("Creates an http-server that will reflect headers back to the client\n"
                     "Run:\n\n"
                     "   reflect")
     (options, args) = parser.parse_args()

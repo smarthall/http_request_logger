@@ -48,7 +48,7 @@ jobs:
         run: docker build . --file Dockerfile.windowsservercore --tag ${Env:IMAGE_NAME}
 
       - name: Log into registry
-        run: docker login docker.pkg.github.com --username ${Env:github.actor} --password ${Env:secrets.GITHUB_TOKEN}
+        run: winpty docker login docker.pkg.github.com --username ${Env:github.actor} --password ${Env:secrets.GITHUB_TOKEN}
 
       - name: Push image
         run: |

@@ -58,7 +58,7 @@ jobs:
 
       - name: Push image
         run: |
-          $IMAGE_ID="docker.pkg.github.com/${Env:github.repository}/${Env:IMAGE_NAME}"
+          $IMAGE_ID="docker.pkg.github.com/${{ github.repository }}/${Env:IMAGE_NAME}"
           $VERSION="latest-windowsservercore"
 
           Write-Host "IMAGE_ID=${IMAGE_ID}"

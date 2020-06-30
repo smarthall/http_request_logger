@@ -19,11 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build image
         run: docker build . --file Dockerfile.linux --tag $IMAGE_NAME
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -44,11 +47,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build image
         run: docker build . --file Dockerfile.windowsservercore --tag ${Env:IMAGE_NAME}
-
-      - name: Log into registry
-        run: winpty docker login docker.pkg.github.com --username ${Env:github.actor} --password ${Env:secrets.GITHUB_TOKEN}
 
       - name: Push image
         run: |

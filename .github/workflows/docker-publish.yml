@@ -61,8 +61,8 @@ jobs:
           $IMAGE_ID="docker.pkg.github.com/${Env:github.repository}/${Env:IMAGE_NAME}"
           $VERSION="latest-windowsservercore"
 
-          Write-Host "IMAGE_ID=$IMAGE_ID"
-          Write-Host "VERSION=$VERSION"
+          Write-Host "IMAGE_ID=${IMAGE_ID}"
+          Write-Host "VERSION=${VERSION}"
 
-          docker tag ${Env:IMAGE_NAME} $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          docker tag ${Env:IMAGE_NAME} ${IMAGE_ID}:${VERSION}
+          docker push ${IMAGE_ID}:${VERSION}

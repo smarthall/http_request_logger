@@ -21,16 +21,15 @@ jobs:
 
       - uses: azure/docker-login@v1
         with:
-          login-server: docker.pkg.github.com
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
       - name: Build image
         run: docker build . --file Dockerfile.linux --tag $IMAGE_NAME
 
       - name: Push image
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=smarthall/$IMAGE_NAME
 
           VERSION=latest
 
@@ -49,16 +48,15 @@ jobs:
 
       - uses: azure/docker-login@v1
         with:
-          login-server: docker.pkg.github.com
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
       - name: Build image
         run: docker build . --file Dockerfile.windowsservercore --tag ${Env:IMAGE_NAME}
 
       - name: Push image
         run: |
-          $IMAGE_ID="docker.pkg.github.com/${{ github.repository }}/${Env:IMAGE_NAME}"
+          $IMAGE_ID="smarthall/${Env:IMAGE_NAME}"
           $VERSION="latest-windowsservercore"
 
           Write-Host "IMAGE_ID=${IMAGE_ID}"

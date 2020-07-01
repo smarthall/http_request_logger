@@ -24,12 +24,30 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
+      - uses: azure/docker-login@v1
+        with:
+          login-server: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build image
         run: docker build . --file Dockerfile.linux --tag $IMAGE_NAME
 
-      - name: Push image
+      - name: Push image to Docker Hub
         run: |
           IMAGE_ID=smarthall/$IMAGE_NAME
+
+          VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
+      - name: Push image to GitHub Packages
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
 
           VERSION=latest
 
@@ -54,7 +72,7 @@ jobs:
       - name: Build image
         run: docker build . --file Dockerfile.windowsservercore --tag ${Env:IMAGE_NAME}
 
-      - name: Push image
+      - name: Push image to Docker Hub
         run: |
           $IMAGE_ID="smarthall/${Env:IMAGE_NAME}"
           $VERSION="latest-windowsservercore"
@@ -64,3 +82,5 @@ jobs:
 
           docker tag ${Env:IMAGE_NAME} ${IMAGE_ID}:${VERSION}
           docker push ${IMAGE_ID}:${VERSION}
+
+      # We can't push the windows image to Docker Hub as foreign layers are not supported
